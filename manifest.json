@@ -1,0 +1,21 @@
+{
+  "name": "Workout Planner Pro",
+  "short_name": "Workout",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#1b5e7a",
+  "theme_color": "#1b5e7a",
+  "description": "Smart workout planner with 1,293 exercises",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192x192?text=💪",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://via.placeholder.com/512x512?text=💪",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
