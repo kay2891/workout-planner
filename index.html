@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Workout Planner | 1,293 Exercises | Track Progress | Weekly Calendar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: #eef2f7;
+            color: #1a2c3e;
+            padding: 20px;
+        }
+
+        .app-container {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #0f2b3d 0%, #1b5e7a 100%);
+            color: white;
+            padding: 28px 32px;
+            border-radius: 24px;
+            margin-bottom: 24px;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .stats-badge {
+            background: rgba(255,255,255,0.15);
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            margin-top: 12px;
+        }
+
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #1a2c3e;
+            width: auto;
+        }
+
+        .tab-btn.active {
+            background: #1b5e7a;
+            color: white;
+        }
+
+        /* Two-column layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 24px;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1a2c3e;
+            border-left: 4px solid #1b5e7a;
+            padding-left: 12px;
+        }
+
+        /* Form elements */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #5a6e7c;
+            margin-bottom: 5px;
+        }
+
+        select, input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            background: white;
+        }
+
+        button {
+            background: #1b5e7a;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: #0f4b63;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #475569;
+        }
+
+        .btn-success {
+            background: #2e7d32;
+        }
+
+        .btn-excel {
+            background: #1e6f3f;
+        }
+
+        /* Muscle chips */
+        .muscle-chip-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .muscle-chip {
+            background: #f1f5f9;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .muscle-chip.selected {
+            background: #1b5e7a;
+            color: white;
+        }
+
+        /* Workout output */
+        .workout-plan {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 16px;
+        }
+
+        .exercise-block {
+            background: white;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
+            border-left: 3px solid #1b5e7a;
+        }
+
+        .warmup-block, .cooldown-block {
+            background: #fef9e3;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 16px;
+            border-left: 3px solid #f59e0b;
+        }
+
+        .section-label {
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        hr {
+            margin: 16px 0;
+            border: none;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* Weekly Calendar */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .calendar-day {
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 12px;
+            min-height: 120px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .calendar-day:hover {
+            background: #e2e8f0;
+            transform: scale(1.02);
+        }
+
+        .calendar-day.today {
+            background: #1b5e7a;
+            color: white;
+        }
+
+        .day-name {
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+        }
+
+        .workout-indicator {
+            font-size: 0.7rem;
+            background: rgba(0,0,0,0.1);
+            padding: 4px;
+            border-radius: 8px;
+            margin-top: 4px;
+        }
+
+        /* Progression Table */
+        .progression-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        .progression-table th, .progression-table td {
+            border: 1px solid #e2e8f0;
+            padding: 8px;
+            text-align: left;
+            font-size: 0.8rem;
+        }
+
+        .progression-table th {
+            background: #1b5e7a;
+            color: white;
+        }
+
+        /* Notes */
+        .notes-area {
+            margin-top: 16px;
+        }
+
+        .saved-workout {
+            background: #e8f5e9;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 1000px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="header">
+        <h1>🏋️ Ultimate Workout Planner</h1>
+        <p>1,293 exercises • 18 categories • Smart warm-up/cool-down • Track progress • Weekly calendar</p>
+        <div class="stats-badge">🔥 Save Workouts | 📊 Progression | 📅 Weekly Planner | 📝 Notes</div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('planner')">📋 Workout Planner</button>
+        <button class="tab-btn" onclick="showTab('calendar')">📅 Weekly Calendar</button>
+        <button class="tab-btn" onclick="showTab('progress')">📈 Progression Tracker</button>
+        <button class="tab-btn" onclick="showTab('saved')">💾 Saved Workouts</button>
+        <button class="tab-btn" onclick="showTab('excel')">📎 Excel Export</button>
+    </div>
+
+    <!-- TAB 1: WORKOUT PLANNER -->
+    <div id="plannerTab" class="dashboard-grid">
+        <div>
+            <div class="card">
+                <div class="card-title">📋 BUILD YOUR WORKOUT</div>
+                <div class="form-group">
+                    <label>🎯 Primary Muscle Focus</label>
+                    <select id="primaryMuscle">
+                        <option value="Chest">Chest</option>
+                        <option value="Back">Back</option>
+                        <option value="Shoulders">Shoulders</option>
+                        <option value="Quads / Glutes">Quads / Glutes</option>
+                        <option value="Hamstrings">Hamstrings</option>
+                        <option value="Core">Core</option>
+                        <option value="Full Body">Full Body</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>📂 Training Category</label>
+                    <select id="workoutCategory">
+                        <option value="Push">💪 Push</option>
+                        <option value="Pull">🏋️ Pull</option>
+                        <option value="Upper Body">💪 Upper Body</option>
+                        <option value="Lower Body">🦵 Lower Body</option>
+                        <option value="Full Body">🏃 Full Body</option>
+                        <option value="Bodyweight">🔄 Bodyweight</option>
+                        <option value="Compound">🏋️ Compound</option>
+                        <option value="Olympic Lifting">🏆 Olympic Lifting</option>
+                        <option value="Band / Resistance">🎗️ Band / Resistance</option>
+                        <option value="Running Related Strengthening">🏃 Running Strengthening</option>
+                        <option value="Speed & Agility">⚡ Speed & Agility</option>
+                        <option value="Conditioning">🔥 Conditioning</option>
+                        <option value="Athletic Power">💥 Athletic Power</option>
+                        <option value="Core">🌀 Core</option>
+                        <option value="Warm-up / Cool-down">🌡️ Warm-up / Cool-down</option>
+                        <option value="Stability / Balance">🪑 Stability / Balance</option>
+                        <option value="Plyometric">⚡ Plyometric</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>⏱️ Workout Duration</label>
+                    <select id="duration">
+                        <option value="short">⚡ Short (20-30 min)</option>
+                        <option value="medium" selected>🔥 Medium (40-50 min)</option>
+                        <option value="long">🏆 Long (60+ min)</option>
+                    </select>
+                </div>
+                <button id="generateBtn">✨ GENERATE SMART WORKOUT</button>
+                <hr>
+                <div class="form-group">
+                    <label>🎯 OR SELECT MULTIPLE MUSCLES</label>
+                    <div class="muscle-chip-group" id="muscleSelectors"></div>
+                </div>
+                <div class="form-group">
+                    <label>📝 Workout Notes (optional)</label>
+                    <textarea id="workoutNotes" rows="2" placeholder="Add notes about this workout..."></textarea>
+                </div>
+                <button id="saveWorkoutBtn" class="btn-success">💾 SAVE THIS WORKOUT</button>
+            </div>
+        </div>
+        <div>
+            <div class="card">
+                <div class="card-title">🏋️ YOUR WORKOUT</div>
+                <div id="workoutOutput">
+                    <div style="text-align:center; padding:40px; color:#7c8b9c;">
+                        👈 Select your focus and click "Generate Smart Workout"
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 2: WEEKLY CALENDAR -->
+    <div id="calendarTab" style="display:none;">
+        <div class="card">
+            <div class="card-title">📅 WEEKLY WORKOUT CALENDAR</div>
+            <div id="weeklyCalendar"></div>
+            <hr>
+            <button id="addToCalendarBtn" class="btn-secondary">➕ ADD CURRENT WORKOUT TO CALENDAR</button>
+        </div>
+    </div>
+
+    <!-- TAB 3: PROGRESSION TRACKER -->
+    <div id="progressTab" style="display:none;">
+        <div class="card">
+            <div class="card-title">📈 PROGRESSION TRACKER</div>
+            <div class="form-group">
+                <label>Select Exercise</label>
+                <select id="progressExercise"></select>
+            </div>
+            <div class="form-group">
+                <label>Add New Entry</label>
+                <input type="text" id="progressWeight" placeholder="Weight (kg/lbs)">
+                <input type="text" id="progressReps" placeholder="Reps" style="margin-top:8px;">
+                <button id="addProgressBtn" style="margin-top:8px;">➕ ADD PROGRESS</button>
+            </div>
+            <div id="progressTable"></div>
+        </div>
+    </div>
+
+    <!-- TAB 4: SAVED WORKOUTS -->
+    <div id="savedTab" style="display:none;">
+        <div class="card">
+            <div class="card-title">💾 SAVED WORKOUTS</div>
+            <div id="savedWorkoutsList"></div>
+            <button id="exportSavedBtn" class="btn-excel">📎 EXPORT ALL SAVED WORKOUTS TO CSV</button>
+        </div>
+    </div>
+
+    <!-- TAB 5: EXCEL EXPORT -->
+    <div id="excelTab" style="display:none;">
+        <div class="card">
+            <div class="card-title">📎 EXCEL EXPORT & DOWNLOAD</div>
+            <p style="margin-bottom:16px;">Download your entire exercise database, progression logs, and saved workouts as CSV files ready for Excel.</p>
+            <button id="exportExercisesBtn" class="btn-excel" style="margin-bottom:12px;">📊 DOWNLOAD ALL EXERCISES (CSV)</button>
+            <button id="exportProgressBtn" class="btn-secondary" style="margin-bottom:12px;">📈 DOWNLOAD PROGRESSION LOG (CSV)</button>
+            <button id="exportWorkoutsBtn" class="btn-secondary">💾 DOWNLOAD SAVED WORKOUTS (CSV)</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ----- FULL EXERCISE DATABASE (1,293 exercises) -----
+    const allExercises = [
+        "1 1/4 Front Squat", "1 Foot Hop", "1 Power Clean + 1 Hang Clean + 1 Thruster", "1,2 Punches With Kick", "1-Arm DB Row", "1-Arm KB Front Rack Carry", "1-Arm KB Row", "1-Arm KB overhead press", "1-Leg RDL Isometric Hold", "1-Leg Step-Up Jump", "1-mile Run", "1/2 Eagles", "1/2 Turkish Get Up", "10 Yard Sprint", "100 Yard Sprint", "100 m Sprint", "150 Yard Sprint", "1600 M Run", "180 Jump & Land", "2 Foot Hop", "2 Point Stance to Sprint", "2 Point Start", "2 Power Cleans + 3 Push Jerk", "2 Push Jerk + Split Jerk Complex", "2 Swing Out Hang High Pulls + Swing Out Hang Snatch", "2\" Runs", "2-Step Lateral Shuffle", "2-arm DB Clean", "20 Yard Sprint", "211", "3 Cone Drill", "3 Hurdle Drill to Stabilize", "3 Point Stance", "3-Position Clean", "3-way Shoulder Shocker", "4 Cone Shuffle w/ Inside Cut", "4 Square Agility", "4-Way Dead Bug", "4-Way Neck", "4-Way/Manual Neck", "4-way Sprints", "40 Yard Dash", "4U0 m repeats", "40yd Dash Stance Part 1", "45 Degree Incline DB Row", "5 Cone Zigzag Drill", "5-10-5 Challenge", "5-10-5 Pro Agility", "5-10-5 Shuttle", "5-10-5 Sprints", "90 Degree Iso Chin Up Hold", "A March Hands on Hips", "A March with Force", "A Run", "A Run to Sprint", "A Skip to A Run", "A Skip with Force", "Accelerate to Decel to Re-accel", "Accelerate to 45 Degree Angle Cuts", "Accelerate to Backpedal to Re-Accelerate (Constant)", "Accelerate to Decelerate", "Accelerate to Decelerate to Backpedal", "Accelerate to Decelerate to Reaccelerate", "Accelerating High Knees", "Acceleration Lunge", "Active Isolated Stretch", "Active Recovery", "Advancing Skater", "Agile8", "Air Squat", "Airdyne", "Alternating KB Lunge", "Alternating KB Press", "Alternating KB Row", "Alternating Leg Swing", "Alternating Supermans", "American KB Swing", "Anderson Squat", "Ankle Roll", "Aquaman Hold", "Arch to Hollow Rolls", "Archer Pull Up", "Archer Push Up", "Arm Action", "Arm Action (Standing)", "Arm Action Series for All Ages (3 Phases)", "Arm Action w/DBs", "Assault Bike", "Assisted Rear Lunge or Split Squat", "Assisted pull up with band and upper back activation", "Athletic Stance to Shuffle", "Average Heart Rate", "B March into Skip", "B March, Hands on Hips", "BB Push Jerk", "BFS Static Flex", "BOSU Plank", "BOSU Squats", "BROAD JUMPS COUNTER MOVEMENT", "BROAD JUMPS NON COUNTER MOVEMENT", "BTN Split Jerk", "Back Extension", "Back Extension With Rotation", "Back Extension w/ball", "Back Leg Heel Raise", "Back Lever", "Back Rack Thruster", "Back Squat", "Back and Forth Acceleration", "Backpedal", "Backstroke Kick with Arms", "Backward Lunge with Twist", "Backward Run", "Backward Sled Drag", "Backward Sled Drags", "Backward Sled Walk", "Backward Squat Walk", "Backward Walking Lunges", "Backwards Skip", "Balance Board", "Ball Bridge", "Ball Drop Acceleration", "Ball Drops", "Ball Passover", "Band ABD External & Ext.", "Band Around the World", "Band Assisted Pull Up", "Band Assisted Push Up", "Band Chest Press", "Band Crab Walk", "Band Crossbody Tricep Extension", "Band Face Pull", "Band Hip Flexor Stretch", "Band Knee Extension", "Band Pass Through", "Band Pull-Apart", "Band Resisted Chops", "Band Resisted Front Plank", "Band Resisted Front Plank Pull", "Band Resisted Hip Rotational Punch", "Band Resisted Lift", "Band Resisted Side Plank Row", "Band Reverse Fly", "Band Rotations", "Band Scapular Retraction", "Band Seated Row", "Band Shoulder Press", "Band Single Arm Row", "Band Skull Crusher", "Band Squat and Press", "Band Tricep Push Down", "Band Walks", "Band Warmup", "Banded Ankle Dorsiflexion Mobilization", "Banded Anterior hip mobilization", "Banded Bench Press", "Banded Bicep Curl", "Banded Bicycle Crunch", "Banded Bird Dog", "Banded Clam Shell", "Banded Diagonal Lift", "Banded Front Raise", "Banded Glute Bridge", "Banded Hip Flexor Pull", "Banded Lat Pull Down", "Banded Lat Squeeze", "Banded Lateral Raise", "Banded Low Row", "Banded Overhead Press", "Banded Overhead Squat", "Banded Overhead Tricep Extension", "Banded Plank Leg Lift", "Banded Plank Row", "Banded Posterior Hip Mobilization", "Banded Psoas Distraction", "Banded Pull Aparts", "Banded Push Up", "Banded Reverse Grip Row", "Banded Row", "Banded Squat", "Banded Tricep Extension", "Banded Tricep Kick Back", "Banded Tricep Pushdown", "Banded Upright Row", "Bar Facing Burpee", "Bar Muscle Up", "Barbell Ab Rollout", "Barbell Achilles Mash", "Barbell Back Squat", "Barbell Back Squat Jump", "Barbell Bench Press", "Barbell Bicep Curl", "Barbell Deadlift", "Barbell Front Raise", "Barbell Hip Thrust", "Barbell Incline Bench Press", "Barbell Lunge", "Barbell Overhead Carry", "Barbell Overhead Press", "Barbell Push-Up", "Barbell Roll Outs", "Barbell Rollout", "Barbell Row", "Barbell Rows", "Barbell Shrug", "Barbell Shrug Behind the Back", "Barbell Split Squat", "Barbell Squat Jump", "Barbell Step Ups", "Barbell Upright Row", "Barbell Warm-up", "Basic Jump Rope", "Bat Wings", "Battle Rope Alternating Waves", "Bear Crawl", "Beginner Ab Circuit", "Beginner Push Ups", "Behind the Neck Jerk", "Behind the Neck Pull Up", "Behind the Neck Push Press", "Belly Sprint", "Below The Knee Hang Clean", "Belt Squat", "Bench Dips", "Bench Press", "Bench Press Max Reps", "Bench Step Overs", "Bent Arm Barbell Pull Over", "Bent Knee Hip Raise", "Bent Knee Neutral Grip Floor Press", "Bent Over DB Fly", "Bent Over DB Row", "Bent Over Rear Delt Fly", "Bent Over Row", "Bent Over Rows", "Bicep Combo-DB & Towel Curl", "Bicep Curl to Shoulder Press", "Bicycle Sit-Ups", "Biking", "Bird Dog", "Bird Dog Row", "Bird Dog Series-Variation Focus on Upper Back Activation", "Bird Dog Squares", "Bird-dog Over Bench", "Blackburn Series", "Block Clean Pull", "Body Saw", "Body Weight", "Body Weight Alternating Lunge", "Body Weight Lunge", "Body Weight Reverse Alternating Lunge", "Body Weight Reverse Lunge", "Body Weight Split Squat", "Bodyweight Row", "Bodyweight Step-Up", "Bosu Ball Crunch", "Bosu Ball Plank", "Bosu Ball Plank with Leg Lift", "Bosu Ball Push Up V1", "Bosu Ball Push Up V2", "Bosu Ball Side Plank", "Bosu Ball Sit Up", "Bosu Form Holds", "Bottom Up KB Press", "Bottom Up Squat", "Box Squat to Box Jump", "Box Toe Tap", "Braemar Stone", "Bretzel", "Bridge", "Brod Jump", "Broad Jump to MB Chest Pass", "Buddy Carry", "Build Up Sprint", "Build Up Sprint 75%", "Build Up Sprint Thigh Drive", "Build Ups", "Bulgarian Split Squat", "Bunny Hops Backwards", "Bunny Hops Forward", "Bunny Hops Lateral", "Bunny Hops Linear", "Burgerer Warmup", "Burpee", "Burpee Bar Muscle Up", "Burpee Box Jump", "Burpee Box Jump Over", "Burpee Broad Jump", "Burpee Kick Through", "Burpee Tuck Jump", "Burpee pull-up", "Butt Kick Jump", "Butt Kick Rope Jump", "Butt Kicks", "Butterfly Crunch", "Butterfly Pull Up", "Butterfly Stretch", "Butterfly Stretch with Hip Mobility", "CROSSOVER TO STABILIZE WITH CATCH", "Cable Cross Woodchop", "Cable Crunch", "Cable Facepull", "Cable Hammer Curl", "Cable Internal Rotation", "Cable Lying Triceps Extension", "Cable Reverse Crunch", "Cable Reverse Curl", "Cable Rotations", "Cable Seated Crunch", "Cable Seated Fly", "Calf Foam Roll", "Calf Raise", "Calf Raise Series", "Calf Stretch", "Cardio", "Carioca", "Carries", "Cat Camel", "Cat Cow", "Cat and Mouse", "Chain Bench Press", "Chain Deadlift", "Chair Pose", "Chest Press", "Chest Stretch", "Chest-Supported DB Row", "Chest-to-bar pull-up", "Childs Pose", "Chin Up with Band", "Chin-Up", "Circle", "Clamshell", "Clamshells", "Clapping Push-Up", "Clean", "Clean & Jerk", "Clean & Jerk Complex #1", "Clean & Jerk Complex #4", "Clean & Press", "Clean & jerk Complex #2", "Clean + Front Squat", "Clean Complex", "Clean Complex #1", "Clean Deadlift", "Clean Grip Deadlift", "Clean High Pull", "Clean Lift Off", "Clean Low Pull", "Clean Pull", "Clean Pull + Power Clean", "Clean Shrug", "Close Grip Barbell Bicep Curl", "Close Grip Bench Press", "Close Grip DB Press", "Close Grip EZ Bar Press", "Close Grip Floor Press", "Close Grip Incline Bench Press", "Close Grip Pull Up", "Close Grip Push-Up", "Cloud Pose", "Cluster", "Cobra", "Cobra Pose", "Combat Abs", "Combination Runs 5 10 5", "Combination Runs Forward and Back", "Combination Runs Lateral", "Crossover Runs", "Commando Pull Up", "Concave Multi Position Abs", "Conditioning Options", "Cone Reaction Drill", "Contralateral Jacknives", "Cook Hip Lift", "Copenhagen Plank", "Core Drills", "Core Series for All Ages (Ab Circuit)", "Core plank variation/legs elevated", "Cossack Squat", "Cossacks", "Couch Stretch (Hip Flexors)", "Counter Movement Medball Shotput", "Counterbalance Pistol Squat", "Counterbalance Squat", "Crab Walk", "Crab Walk/Clam Walk", "Cross Body Hammer Curl", "Cross Over Step Up", "Cross Over Step for COD Using Zoid with Lateral Movement Progression", "Cross over symmetry", "Crossover Crunch", "Crossover Reverse Lunge", "Crossover Step Up", "Crossover Symmetry-Activation", "Crossover Symmetry-Iron Scap", "Crossoverers", "Crunch", "Crunches", "Crunches w/Weight", "Cuban Press", "Curtis P's", "Curtsy Lunge", "Cycling Over the Knee", "Cycling over the Ankle", "DB 2-Way Raise", "DB 3-Way Raise", "DB Arnold Press", "DB Bench Press", "DB Bench Pull-over", "DB Bicep Curls", "DB Box Jump", "DB Box Squat", "DB Bulgarian Split Squat", "DB Chest Fly", "DB Clean & Jerk", "DB Crossbody Carry", "DB Crunch", "DB Crunch & Twist", "DB Deadlift", "DB Farmer's Carry", "DB Farmer's Walk", "DB Floor Press", "DB Fly", "DB Front Rack Hold", "DB Front Rack Walking Lunge", "DB Front Raise", "DB Front Squat", "DB Good Morning", "DB Hang Clean", "DB Hang Cluster", "DB Hang Power Clean & Jerk", "DB Hang Split Snatch", "DB Hang Squat Clean", "DB Hang Squat Clean Thruster", "DB Incline Fly", "DB Incline Front Raise", "DB Incline Row", "DB Incline Tricep Extension", "DB Jump Lunge", "DB Jump Squat", "DB Lateral Lunge", "DB Lateral Raise", "DB Lateral Raise 2-1-1", "DB Lateral Step-Up", "DB Lunge", "DB Lunge & Curl", "DB Lunges", "DB Lying Rear Lateral Raise", "DB Military Press", "DB Overhead Carry", "DB Overhead Reverse Lunge", "DB Overhead Squat", "DB Overhead Tricep Extension", "DB Pistol Squat", "DB Plank Pull Through", "DB Power Clean", "DB Power Snatch", "DB Prone Retraction & Rear Raise @30*", "DB Pullover", "DB Push Press", "DB Rear Foot Elevated Split Squat", "DB Renegade Row", "DB Reverse Fly", "DB Reverse Grip Wide Row", "DB Reverse Lunge", "DB Reverse Lunge (Front Foot Elevated)", "DB Roll Back", "DB Row", "DB Russian Twist", "DB Scaption", "DB Seated Bent Over Double Arm Tricep Extension", "DB Seated Single Leg Calf Raise", "DB Shoulder Press", "DB Shoulder Press 2-1-1", "DB Shrug", "DB Shrug Series", "DB Side Bend", "DB Side Press", "DB Single Arm Tricep Extension", "DB Single Leg Deadlift", "DB Snatch", "DB Split Clean", "DB Split Squat", "DB Squat", "DB Squat Clean", "DB Step Up", "DB Sumo Deadlift", "DB Swing", "DB Thruster", "DB Tricep Extension", "DB Tricep Extension Pronated Grip", "DB Walking Lunge", "DB Windmill", "DB Wrist Curl", "DB Z Press", "Dead Bug", "Dead Bug with Mini Bands", "Dead Hang", "DeadBug", "Deadlift", "Deadlift Block Pull", "Deadlift Burpee", "Deadlift Sumo", "Deceleration Catches", "Deceleration Push Up", "Decline Bench Crunch", "Decline Bench Press", "Decline DB Bench Press", "Decline Forearm Plank", "Decline Plank", "Decline Push Up", "Decline Side Plank", "Decline Sit Up", "Decline Spider", "Deep Squat", "Deep Squat Breathing", "Deep Squat Stretch", "Defensive Shuffle", "Deficit Clean Deadlift", "Deficit Clean Pull", "Deficit Deadlift", "Deficit Push Up", "Deficit Snatch", "Deficit Snatch Deadlift", "Deficit Snatch Pull", "Depth Jump", "Depth Jump to Vertical Jump", "Depth Plyo Push-Up", "Diamond Push Up", "Diamond Push-Up", "Dimel Deadlift", "Dips", "Dive Bomber Push Up", "Dog Squat-Random Item Squat", "Donkey Kicks", "Dot Drill (BFS)", "Double Crunch", "Double Deadbug", "Double Exchange", "Double KB Clean & Jerk", "Double KB Clean & Push Press", "Double KB Front Squat", "Double KB Push Jerk", "Double KB Push Press", "Double KB Racked Squat", "Double KB Row", "Double KB Split Jerk", "Double Leg Zig Zags", "Double Pigeon Stretch", "Double Under", "Dowel Hand Walks", "Dowel Pass-Throughs", "Downward Dog Lunge Rotation", "Drag Curl", "Drinking Bird", "Drop Jump", "Drop Lunge to Hold", "Drunken Mountain Climbers", "Dynamic Activation", "EZ Bar Lying Tricep Extension", "EZ Bar Skull Crusher", "Eagle Arms Stretch", "Eccentric Split Squat", "Elbow to Knee", "Elbows Out DB Tricep Press", "Elevated Body Weight Calf Raise", "Elevated Single Leg Body Weight Calf Raise", "Elite6", "Exercise Ball Crunch", "Exercise Ball DB Chest Press", "Exercise Ball DeadBug", "Exercise Ball Forearm Plank", "Exercise Ball Plank", "Exercise Ball Pull In", "Extended High Plank", "Falling Starts", "Farmers carry", "Feet Elevated Push Up", "Feet Elevated Push-Up", "Figure 8s", "Finger Touch Squat Jumps", "Fire Hydrant", "Fire Hydrant Heel Press", "Fire Hydrant Side Leg Raise", "Fire Hydrants", "Fire Hydrants Backward Circle", "Fire Hydrants Forward Circle", "Flat Bench Leg Pull In", "Flat Bench Lying Leg Raise", "Flexibility/Mobility Routine", "Fling Jacks", "Flings", "Floor L Sit", "Floor Press", "Flutter Kick", "Flutter Kicks", "Fly Sprint", "Flying 40s", "Flying 60s", "Flying 80's", "Foam Roll", "Foam Roll IT Bands", "Forearm Wall Slide w/ Retraction", "Forward Bound", "Forward Box Drop Start", "Forward Hip Circles through Back Extension-Ground Activation", "Forward Lunge with Forearm to Instep", "Forward Lunge with Hands on Hips", "Forward Sled Drag", "Forward Sled Drags", "Forward Walking Lunges", "Four Corners", "Frankenstein Squat", "Frankenstein Walks", "Free Standing Hand Stand Push Up", "Freestanding Handstand", "Frog Crunch", "Frog Jump", "Frog Jumps", "Frog Pose", "Front Cross Over Lunge", "Front Foot Elevated Split Squat", "Front Kicks", "Front Lever", "Front Lunge with Shoulder Raise", "Front Plan with Hip Extension", "Front Plank on Elbows", "Front Plate Raise", "Front Rack Carry", "Front Rack KB lunge", "Front Rack Step-Ups", "Front Rack Walking Lunge", "Front Raise & Pull Over", "Front Scale", "Front Skips", "Front Squat", "Front Squat + Jerk", "Front Squat Iso Hold", "Front Squat Static Hold", "Front-Leaning Rest (FLR)", "Full Body Activation", "Full Kneel Chop", "Full Saddle", "GHD Hip Extension", "GHD Sit-Up", "Game: Color-coded Races", "Game Play", "Gate Swings", "Glute Bridge", "Glute Bridge Hamstring Walkout", "Glute Warm Up", "Glute activation bridge", "Glute-Ham Raise", "Goblet DB Platform Slide", "Goblet Lateral Lunge", "Goblet Squat", "Goblet Squats", "Goblet Squats with Miniband", "Good Morning", "Good Morning + Front Squat + Back Squat", "Gorilla Pull Up", "Grilla Dullin", "Groiner", "Groiners + Frog Jumps", "Ground to Overhead", "HALF KNEELING PARALLEL MED-BALL THROWS NON-COUNTER MOVEMENT", "HURDLE MOBILITY WORK", "Hack Squat", "Half Gasser", "Half Kneel Chop", "Half Kneeling KB Press", "Half Saddle", "Half Superman Hold", "Half-Kneeling Anti-Rotation Hold", "Half-Kneeling DB Shoulder Press", "Half-Kneeling KB Press", "Half-Kneeling Med Ball Chop", "Halting Snatch Deadlift", "Hammer Curl", "Hamstring Curl on Slides", "Hamstring Rope Stretch", "Hand Release Push-Up", "Hand Stand Pirouette", "Hand Stand Walk", "Hand Stand Walk to Wall", "Hand Stand Walk with Step Obstacle", "Handcuff Stretch", "Hands-Free Side Plank", "Hands-free front squat", "Handstand Balance", "Handstand Basics", "Handstand Hold", "Handstand Push-Up", "Handstand Shoulder Taps", "Handstand Walk", "Hang Clean", "Hang Clean + Clean + Front Squat", "Hang Clean + Clean + Jerk", "Hang Clean + Front Squat + Push Press", "Hang Clean High Pull", "Hang Clean Jump Shrug", "Hang Clean Pull", "Hang Clean and Press", "Hang Power Clean", "Hang Power Clean + Power Clean", "Hang Power Snatch", "Hang Snatch", "Hang Snatch High Pull", "Hang Snatch Pull", "Hang Snatch Shrug", "Hang Squat Clean", "Hang Squat Snatch", "Hanging Hip Touch", "Hanging Knee Raise", "Hanging L Sit", "Hanging Leg Raise", "Happy Baby", "Hat Twist", "Head Stand", "Head to Mat HSPU", "Heaving Snatch Bounce", "Heavy Weight for Distance", "Heel Elevated Back Squat", "Heel Taps", "Heel Walks", "Heels Elevated Hip Thrust", "Heiden To One Leg Vertical Jump", "Heroic Warm-up", "Hex Bar Bent Over Row", "Hex Bar Deadlift", "High Bar Back Squat", "High Hang Clean", "High Hang Power Snatch+ ATK Power Snatch", "High Hang Snatch", "High Knee Carioca", "High Knee Hug", "High Knee Jump Rope", "High Knees In Place", "High Knees With Forward Travel", "High Plank Drag", "High Plank Walk", "High Pogo", "High Pogos Over Hurdles", "High Pull", "Hindu Push-Up", "Hip Abductor Machine", "Hip Adductor Machine", "Hip Air Plane", "Hip Airplane", "Hip Bridges Variations", "Hip Cradle", "Hip Crossover", "Hip Extension with Freestyle", "Hip Flexion with Band", "Hip Flexor Knee Drive", "Hip Hinge", "Hip Mobility-KB Squat", "Hip Pull-Apart", "Hip Rotator Series", "Hip Step Outs", "Hip Thrust", "Hip Thrust-Bodyweight", "Hip Thrust Band Around Knees", "Hip Thruster", "Hip circles", "Hips-To-Rings Kip", "Hollow Hold", "Hollow Rock", "Hopping Circuit for ADW", "Horizontal Row", "Hurdle Drill Continuous", "Hurdle Hop Backwards to Forwards to Sprint", "Hurdle Hop Sideways to Sprint", "Hurdle Hop to Sprint", "Hurdle Hops", "Hurdle Hops Backward", "Hurdle Hops Forward", "Hurdle Jumps", "Hurdle Walks", "Hydrants", "Hyperextension", "Hyperice-Neck and Back", "IN AND OUT QUICK JUMPS", "Ickey Ladder Drills", "In & Out Box Jump", "In & Out Forward and Back Quick Jumps", "In Place Lunge", "Inch Worm", "Inch Worm Walk", "Inchworm", "Inchworm Push-Up", "Inchworm Shoulder Tap", "Incline Barbell Tricep Extension", "Incline Bench Press", "Incline Close Grip Pu Up", "Incline DB Bench Press", "Incline DB Curl", "Incline DB External Rotation", "Incline DB Fly", "Incline DB Press with Palms Facing In", "Incline DB Row", "Incline Lateral Raise", "Indian Club Basics", "Inside Leg Raise", "Inverted Retraction & Row", "Inverted Row", "Iron Cross", "Iso Hold DB Curl", "Iso Jump Squat", "Isometric Lunge Hold", "Isometric Push Up", "JM Press", "Jack Knife", "Janda Sit Up", "Jefferson Deadlift", "Jerk", "Jerk Balance", "Jerk Dip", "Jerk Recovery", "Jog", "Jump Back Sprint", "Jump Back Starts", "Jump Over Bench", "Jump Rope", "Jump Rope Series", "Jump Shrug", "Jump Squat", "Jump onto Bosu", "Jumping Chest to Bar Pull-Up", "Jumping Jack Solo Holding Med Ball", "Jumping Jacks", "Jumping Jacks (Basic)", "Jumping run-up", "Junk Yard Dog", "KB Arnold Press", "KB Clean & Push Press", "KB Curtis Lunge", "KB Farmer's Walk", "KB Figure 8", "KB Halo", "KB Hang Clean", "KB High Pull", "KB Lateral Lunge", "KB Low Windmill", "KB Lunge", "KB Lunge with Rotation", "KB Marching Farmer's Walk", "KB Overhead Carry", "KB Overhead Press", "KB Pistol Squat", "KB Plank Row", "KB Press", "KB Push Press", "KB Push Up to Renegade Row", "KB Renegade Row", "KB Russian Twist", "KB Seated Press", "KB Seesaw Press", "KB Side Lunge Press", "KB Single Leg Deadlift", "KB Snatch", "KB Squat High Pull", "KB Squat to High Pull", "KB Sumo High Pull", "KB Swing Squat", "KB Waiter Press", "KB Windmill", "KB double leg RDL", "KB single leg RDL", "KB swings", "Kettle Bell Basics", "Kettle Bell Deadlift", "Kettlebell Deadlift", "Kipping Handstand Push-Up", "Kipping Muscle Up", "Kipping Pull-Up", "Kipping Ring Muscle-Up", "Kipping Toe to Bar", "Knee Drives", "Knee Hug", "Kneeling Bench Shoulder Stretch", "Kneeling Forearm Stretch", "Kneeling Hip Flexor Stretch", "Kneeling Hip Flexor/Quad Stretch", "Kneeling Jump", "Kneeling Landmine Press", "Kneeling Med Ball Thruster", "Kneeling Med-Ball Throw", "Kneeling Single Arm High Pulley Row", "Knees Bent Iron Cross", "Knees To Chest", "Knees to Elbows", "L Drill", "L Over", "L Pull-Up", "L Sit Chin Up", "L-Sit", "L-Sit Pop", "LATERAL BROAD JUMP TO BASE", "LATERAL BROAD JUMP TO STABILIZE", "LATERAL JUMP OVER HURDLE CONTINUOUS", "LATERAL LUNGE W DROPS", "LATERAL SHUFFLE TO BASE", "LATERAL SHUFFLE TO CUT AND ACCELERATE", "LINEAR JUMP OVER HURDLE CONTINUOUS", "LINEAR SPEED ACCELERATION", "Ladder Drills", "Ladder Tag", "Landing Drills", "Landing Position", "Landing Training", "Landmine Anti Rotation", "Landmine Anti Rotation Hands on Plate", "Landmine Anti-Rotation", "Landmine Bar Twist", "Landmine Lateral Raise", "Landmine Press Squat", "Landmine Reverse Lunge", "Landmine Squat", "Laps Around the Complex", "Lat & Pec Stretch", "Lat Foam Roll", "Lat Pull Downs", "Lat Pulldown", "Lateral Balance Hops", "Lateral Bench Hop Over", "Lateral Bound", "Lateral Bounds to Stabilize", "Lateral Box Jump", "Lateral Broad Jump", "Lateral Burpee Over Barbell", "Lateral Burpee Traverse Over Box", "Lateral Depth Jump", "Lateral Hop", "Lateral Hops (Outside/Inside)", "Lateral Hurdle Hop", "Lateral Jump Stick and Hold", "Lateral Jump To Stabilize", "Lateral Jump to Counter Movement", "Lateral Jump to Stabilize", "Lateral Jumps", "Lateral Jumps Rapid Fire", "Lateral Leg Raise", "Lateral Lunge", "Lateral Lunge Hop", "Lateral Lunge in Place", "Lateral Mini Hurdle", "Lateral Mini Hurdle-Sprint", "Lateral Over-The-Bar Burpee", "Lateral Raise With External Rotation", "Lateral Raise with Band", "Lateral Run Over Hurdles to Front Run", "Lateral Shuffle To Cut", "Lateral Shuffle to Cut", "Lateral Sled Drags", "Lateral Speed Skaters", "Lateral Step and Sprint", "Lateral Toe Tap", "Lateral Toe Tap on Elevated Surface", "Laying Handstand Hold Drill", "Leg Extension", "Leg Lift", "Leg Lowering", "Leg Press", "Leg Pull In", "Leg Raise", "Leg Raise Series", "Legless Rope Climb", "Light Jog", "Light Weight For Distance", "Linear ADW Basic 1", "Linear Bound", "Linear Jump Over Hurdle To Stabilize", "Lizard Crawl", "Long Arm Crunch", "Low Box SL Squat", "Low Hang Clean", "Low Lunge w/recovery", "Low Pogo + High Pogo", "Low Pogo Jumps", "Low Row with External Rotation", "Low Squat Ankle Jump", "Low pogo jump into squat", "Low-Incline Bench Press", "Lower Body Jacks", "Lu Raise", "Lunge", "Lunge Jumps", "Lunge Stretch", "Lunge Technique", "Lunge Walk", "Lunge Walk with Rotation", "Lunge to Instep", "Lunge with Twist Stretch", "Lunges", "Lunges (Walking)", "Lunges with barbell", "Lying Close Grip Barbell Tricep Extension Behind the Head", "Lying DB Curl", "Lying Down Start", "Lying Figure Four Stretch", "Lying Handcuffs", "Lying Knee to Chest", "Lying Knee to Chest Stretch", "Lying Knee to Knee Stretch (Hip Internal Rotation)", "Lying Knees to Chest Stretch", "Lying Leg Curl", "Lying Leg Kicks", "Lying Leg Raise On Bench", "Lying Rear Delt Raise", "Lying Tricep Extension", "Lying Triceps Extension", "Lying Trunk Twist", "MB Core Circuit", "MB Forward Throw", "MB Push-Up & Chest Pass", "MB Side Throw", "MED BALL SQUAT THROW W COUNTERMOVEMENT", "Manmaker", "Manual Ankle Dorsiflexion Mobilization", "March", "Marching In Place", "Matador Stretch", "Max Effort Broad Jump", "Max Effort Vertical Jump", "McGill Bird Dog", "McGill Core Strength progression", "McGill KB Bottoms up Carry", "McGill Push Up Mountain climber", "McGill Side Plank Rotations", "McGill Standing Hip circles", "McGill hip airplane", "Med Ball", "Med Ball A March/Skip/Run", "Med Ball Chest Pass", "Med Ball Figure", "Med Ball Hanging Straight Leg Raise", "Med Ball OH Skip/Run", "Med Ball Power Drop", "Med Ball Rotation", "Med Ball Rotational Throw", "Med Ball Sit Up", "Med Ball Sit-Up", "Med Ball Slam", "Med Ball Slams", "Med Ball Squat Throw (non counter)", "Med Ball Straight Arm Sit Up", "Med Ball Throw", "Med Ball Toe Touch", "Med Ball Twists", "Med Ball Vertical Throw", "Med Ball Wall Throw", "Medicine Ball Chest Pass", "Medicine Ball Forearm Plank", "Medicine Ball High Plank Roll", "Medicine Ball Mountain Climber", "Medicine Ball Plank", "Medicine Ball Slam", "Medicine Ball Squat to Press", "Middle Back Shrug", "Mini Bands", "Mini Hops", "Mini Hurdle", "Miniband Alphabet", "Mirror Game", "Mixed Grip Pull Up", "Mixed Grip Pull-Up", "Modified Push Up", "Monster Walks", "Mountain Climber", "Mountain Climber Plank", "Mountain Climbers", "Mountain Pose", "Moving Skater", "Mule Kick", "Multi directional jumps", "Multiplane Lunge", "Muscle Snatch", "Negative Pull Up", "Ninja Push Ups", "No Push Up Burpee", "Oblique Crunch", "Oblique Side Crunch", "Offset DB Bench Press", "On Knee Bosu Balance", "One arm DB floor press", "One arm DB incline", "One-Arm Curl+Press", "One-Arm DB Bench Press", "One-arm Forward Back KB Lunge", "Open Stone", "Otis Up", "Overhead Front Raise", "Overhead MB Throw", "Overhead Press", "Overhead Reverse Lunge", "Overhead Squat", "Overhead Squat w/PVC", "Overhead Squat with Bar", "Overhead walking lounge", "PT- Back: Scapular clock", "PT- Standing External and Internal Rotation", "Pacer Test", "Paloff Press", "Paloff Press Walk Out", "Paloff Press with Rotation", "Parallelle Handstand Push-Up", "Parallelle L-Sit Hold", "Partner Med Ball Situp", "Partner Neck Isometric", "Partner Nordic Hamstring Curl", "Partner Scap Retraction", "Partner-Resisted Leg Curl", "Paused Deadlift", "Paused Front Squat", "Paused Push-Up", "Pendlay Row", "Physio Ball Core Variations", "Physio Ball Hip Bridge", "Physio Ball Push ups", "Physio ball Plank", "Physioball Leg Curl", "Physioball Toe Tap", "Pigeon Stretch", "Pike Pushup", "Pin Press", "Pistol Squat", "Plank", "Plank Crunch", "Plank Jack", "Plank Jack Push-Up", "Plank Jacks", "Plank Opposite Knee", "Plank Press", "Plank Pulls", "Plank Series for All Ages", "Plank Up Downs", "Plank Walk front to back", "Plank to Down Dog", "Plank to Push Up", "Plate Flip", "Plate Front Raise", "Plate Get-Up", "Plate Hammer Curl", "Plate Hold", "Plate Overhead Lunge", "Plate Pinch Grip Hold", "Plate Push", "Plate Raise", "Plate Twist", "Plate Walk", "Plyo Push-Up", "Plyometric Push-ups", "Pogo Jump", "Pop Squat", "Pose Running", "Posture Series for JS2 and TP", "Powell raise", "Power Clean", "Power Clean & Press", "Power Clean + Front Squat", "Power Clean + Power Jerk", "Power Clean + Push Jerk", "Power Clean + Thruster", "Power Clean Complex", "Power Clean Shrug", "Power Clean from Blocks", "Power Jerk", "Power Shrugs", "Power Skip", "Power Snatch", "Power Snatch + Overhead Squat", "Power Snatch Complex", "Power Snatch from Blocks", "Power Squat", "Power Step-Up", "Preacher Curl", "Press Ups (Mobility)", "Pretzel", "Pro-Agility Drill", "Prone Flutter Kick", "Prone Hip Mobility", "Prone Hurdlers", "Prone Machine Hamstring Curl", "Prone Press w/Ext.Rotation", "Prone Scorpion", "Prone X", "Prone Y's,T's", "Protraction Retraction", "Prowler Push", "Pseudo Planche Push-Up", "Pull Downs", "Pull Through", "Pull Up Iso Hold", "Pull Up Negative", "Pull Up Progression", "Pull-Up", "Pull-up", "Pull-up Series", "Pullover", "Punches 1-6", "Puppy Dog Pose", "Push Jerk", "Push Press", "Push Press + BTN Jerk + Split Jerk", "Push Press + Overhead Squat", "Push Press + Push Jerk", "Push Press + Push Jerk + Split Jerk", "Push Up Crocodile", "Push Up Mountain Climber Start", "Push Up Starts", "Push Up Walk Out", "Push Up to Down Dog", "Push Up to Side Plank", "Push Up with Feet on Exercise Ball", "Push Ups", "Push-Up", "Push-Up Plus", "Quad Exchange", "Quad Foam Roll", "Quad Hold", "Quad Stretch", "Quarter Squat Jumps", "Quick Feet", "Quick Feet Side Shuffle", "Quick Rebounding Heel Raise", "Quick Step to Sprint", "Quick Step to Thigh Drive", "Quick Steps", "Quick Steps to Sprint", "RDL", "RDL+Jump Shrug+Hang Power Clean+Front Squat", "RDL Step up", "RDL to Shrug", "Rack Pull", "Reach Across", "Reach Thru", "Reactive Sprint to Backpedal", "Rear Delt Flyes", "Rear Foot Elevated Split Squat", "Rear Leg Raise", "Release Push-up", "Resistance Band Lat Pull Down", "Resistance Band Row to External Rotation", "Resisted Broad Jumps", "Resisted Jumps", "Resisted Lateral Shuffle", "Resisted Mountain Climber", "Resisted Run", "Resisted Skips", "Resisted Sprint", "Resisted Starts", "Rest", "Reverse & Front Lunge", "Reverse Barbell Curl", "Reverse Barbell Preacher Curl", "Reverse Burpees", "Reverse Crunch", "Reverse Fly in GHD", "Reverse Fly with Pronated Grip", "Reverse Flys", "Reverse Grip Bench Press", "Reverse Grip Bent Over Row", "Reverse Grip Yates Row", "Reverse Hyper Ext", "Reverse Hyperextension", "Reverse Lunge", "Reverse Lunge to Step Up", "Reverse Lunge w/Diagonal Chop", "Reverse Lunges", "Reverse Plank", "Reverse Plate Curl", "Reverse Run", "Reverse Shot Toss", "Reverse Walking Lunge", "Ring Bicep Curl", "Ring Dip", "Ring Dips", "Ring False Grip Hang", "Ring Fly", "Ring Hamstring Curl", "Ring Knee Tuck", "Ring Muscle Up", "Ring Pull Up", "Ring Push Ups", "Ring Push-up", "Ring Rows", "Ring Tricep Extension", "Road Cycling", "Rocket Jump", "Rocking Standing Calf Raise", "Roll Up Crunch", "Rolling Hurdler", "Rolling Side Plank", "Rolling Start", "Rolling Tricep extensions", "Rollover to a V Sit", "Roman Chair Leg Raises", "Romanian Deadlift", "Romanian Deadlift (RDL)", "Romanian Deadlift from Deficit", "Romanian Deadlift with DB", "Romanian Deadlift with KB", "Rope Climb", "Rope Curl", "Rope Pull", "Rotary Plank", "Rotary Row with External Rotation - Swim", "Rotator Cuff Circuit", "Rowing", "Run", "Run in Place Breakdown", "Run-Specific Warm-Up", "Runners Stretch", "Running Leap & Broad Jump Combinations", "Running Mechanics", "Running Progression for COD: Diver, Load, Broad Jump to a Run", "Running Speed Skater", "Russian KB Swing", "Russian Lean", "Russian Twist", "S/A DB Shoulder Press", "SA KB Squat to Overhead Press", "SB Around the Worlds", "SB Bear Hug", "SB Deadbugs", "SB Foundational Rowing", "SB Front Loaded Good Mornings", "SB Grip Rows", "SB Hammy Curl", "SB ISO PUIS", "SB MAX (multiple axis) Glute Bridge", "SB Military Press", "SB Overhead Press", "SB Plank Rows", "SB Press Up Glute Bridge", "SB Shoulder Lateral Lunge", "SB Shoulder Sprinter Squat", "SB Straight Leg Bridge With SL Lift", "SB Tall Kneeling Arc Press", "SB Thruster", "SHORT SHUTTLE", "SINGLE LEG LINEAR HOP OVER HURDLE Continuous", "SINGLE LEG LINEAR HOP TO STABILIZE", "SKLZ Stability Ball: Plank With Legs Elevated Drill", "SL Bicep Curl", "SL RDL to Step Up", "SQUAT JUMPS NON COUNTERMOVEMENT", "Safety Bar Box Squat", "Safety Bar Bulgarian Split Squat", "Safety Bar Front Squat", "Safety Bar Good Morning", "Safety Bar Half Heeled Split Squat", "Safety Bar Half Heeled Squat", "Safety Bar Reverse Lunge", "Safety Bar Split Squat", "Safety Bar Squat", "Sandbag Carry", "Sandbag Crawling", "Sandbag Power Clean Variations", "Sandbag Rotational Press", "Sandbag Row", "Sandbag Squat", "Scap Activations", "Scap Circuit", "Scap Push-Up", "Scapular Push Up", "Scapuler Pull Up", "Scarecrows", "School Yard Skip", "Scissor Jump", "Scissor Jumps", "Scissor Kicks", "Scorpion", "Seal Jacks", "Seated Arm Action", "Seated Arm Drill", "Seated Arnold DB Press", "Seated Band Hamstring Curl", "Seated Banded Calf Stretch", "Seated Banded Leg Curls", "Seated Bent Over Rear Delt Raise", "Seated Box Jump", "Seated Cable Row", "Seated Chest Press", "Seated DB Curl", "Seated DB Front Raise", "Seated DB Palms Down Wrist Curl", "Seated DB Power Clean", "Seated DB Tricep Extension", "Seated Double DB Tricep Extension", "Seated External Rotation", "Seated Flat Bench Leg Pull In", "Seated Forward Fold", "Seated Hammer Curl", "Seated Incline DB Curls", "Seated Military Press", "Seated Overhead DB Extension", "Seated Palm Up Barbell Wrist Curl", "Seated Palms Down Barbell Wrist Curl", "Seated Rope High Pull", "Seated Row", "Seated Single Arm DB Palms Down Wrist Curl", "Seated Single Arm DB Palms Up Wrist Curl", "Seated Single Leg Press", "Seated Straight Leg Pull In", "Semi Straight Leg Iron Cross", "Session RPE", "Shoulder Jacks", "Shoulder Mobility - Lax Ball", "Shoulder Press, Push Press, Push Jerk Progression", "Shoulder Roll & Sprint", "Shoulder Stand", "Shoulder Stretch", "Shoulder T", "Shoulder Taps", "Shoulder Tri Set w/Bands", "Shuttle Sprint", "Side Bridge", "Side Jack Knife", "Side Jumps", "Side Leg Lift Ground", "Side Leg Lifts from Ground (ADW, Hip Mobility)", "Side Leg Raise", "Side Lunge Touching Heel", "Side Lunges with Slider", "Side Lunges with Sliders", "Side Lying External Rotation", "Side Lying Ground Circuit ADW", "Side Lying Internal Rotation", "Side Plank", "Side Plank Crunch", "Side Plank On Hand", "Side Plank Rotation", "Side Plank on Elbows", "Side Plank with Banded Clamshell (Dynamic)", "Side Plank with Dynamic Clam Shell", "Side Plank with Hip Abduction", "Side Run", "Side Run 5-10-5", "Side Shuffle", "Side Shuffle to a Sprint", "Side Shuffles Into A Sprint", "Side Shuffles into a Sprint", "Side Skipping", "Side Skipping (lateral)", "Side Stretch", "Side To Side Box Jump", "Side to Side Push Up", "Sideline Sprint", "Sidesteps", "Single Arm DB Overhead Squat", "Single Arm DB Shoulder Press", "Single Leg 1/4 Eagle", "Single Leg Balance & Reach", "Single Leg Ball Curl", "Single Leg Bounds", "Single Leg Box Drive", "Single Leg Box Drive Alternating", "Single Leg Box Jump", "Single Leg Bridge", "Single Leg Hops", "Single Leg KB Pass Over", "Single Leg Lateral Hop over Hurdle", "Single Leg Lateral Jumps to a Run", "Single Leg Lowering", "Single Leg Push Off", "Single Leg RDL", "SkiErg", "Skip in Place", "Skip with Arms", "Skip with Med Ball", "Skipping with Recovery", "Skips", "Skull Crusher", "Sled Push", "Sled Sprints", "Sledgehammer Strikes", "Slider Army Crawl", "Slider Pike-Up", "Snap Down", "Snatch", "Snatch First Pull", "Snatch Grip Deadlift", "Snatch High Pull", "Snatch Lift Off", "Snatch Pull", "Snatch Pull + Snatch", "Snatch Push Press", "Spiderman Push-up", "Split Clean", "Split Jacks", "Split Jerk", "Split Jerk + BTN Split Jerk", "Split Jump", "Split Snatch", "Squat Abduction With Band", "Squat Clean", "Squat Clean + Push Press", "Squat Clean Complex", "Squat Clean Thruster", "Squat Hold with Med Ball", "Squat Jerk", "Squat to Stand", "Squats", "Stability Ball Chest Press (SA)", "Stability Ball Hamstring Curl", "Stability Ball Pike with Knee Tuck", "Stability Bear Crawl in All Directions", "Stability push-ups", "Standing Bent Over Two Arm DB Tricep Extension", "Standing Bicep Stretch", "Standing Bradford Press", "Standing Broad Jump", "Standing Cable Side Bend", "Standing Cable Wood Choppers", "Standing Curl + Press", "Standing Knee to Elbow", "Standing Landmine Press", "Standing Overhead DB Tricep Extension", "Standing Palms Up Barbell Behind the Back Wrist Curl", "Standing Single Arm DB Curl Over Incline Bench", "Standing Single Arm DB Tricep Extension", "Standing Stretch/Mobility Series", "Star Jump", "Stationary Reverse Lunge", "Step Back Lunge", "Step Down", "Step Up", "Step Up (Goblet)", "Step Up Bound", "Step Up with Knee Raise", "Straight Leg Bounds to Sprint", "Straight Leg Crunch", "Straight Leg Deadlift", "Straight Leg Heel Raise", "Straight Leg Shuffle", "Straight Leg Sit Ups", "Straight Legged Hip Raise", "Suicide Sprints", "Suitcase Carry", "Suitcase Crunch", "Suitcase Deadlift", "Suitcase Squat", "Sumo Deadlift", "Sumo Deadlift Block Pull", "Supine", "Supine DB Tricep Press", "Supine Double Leg Bridge", "Supine External Rotation", "Supine Iron Cross", "Supine Leg Swing", "Supine Twist", "Swiss Ball DB Press", "Swiss Ball Hip Thrust", "Swiss Ball Jack Knife", "Swiss Ball Lunge", "Swiss Ball Pike", "Swiss Ball Superman", "Swiss ball", "TRX Atomic Push-Up", "TRX Balance Lunge w/Drive", "TRX Biceps", "TRX Biceps Curl", "TRX Body Saw", "TRX Bulgarian Split Squat", "TRX Chest Fly", "TRX Hip Hinge Stretch", "TRX Hip Press", "TRX IDeltoid Fly", "TRX Knee Rollout", "TRX Knee Tap Squat", "TRX Knee Tuck", "TRX Lateral Lunge", "TRX Oblique Crunch", "TRX Overhead Squat", "TRX Pike", "TRX Pistol Squat", "TRX Plank", "TRX Plank Progression", "TRX Power Pull", "TRX Split Deltoid Fly", "TRX Standing Rollout", "TRX Standing Torso Rotation", "TRX Step Back Lunge", "TRX Stretch", "TRX Torso Rotation", "TRX Tricep Extension", "Tempo Back Squat", "Tempo Goblet Squat", "The Dip", "Theraband Ankle Band Walks", "Theraband Monster Walks", "Theraband Side Walk", "Thigh Drive Moving", "Timed Sprints", "Toe Touch Squat w/OH Reach", "Toe Touch to Overhead Squat", "Toe Touches", "Toe Touches for Balance", "Toe touches", "Toes Through Rings", "Total Conditioning Ground Circuit for ADW", "Towel Bench", "Towel Hang", "Towel Pull-Up", "Toy Soldier", "Trap Bar Deadlift", "Trap Bar Deadlifts", "Trap Bar Jump", "Treadmill Work", "Tree Pose", "Triangle Pose", "Tricep Arm Cross", "Tricep Choice", "Tricep Kick Back", "Tricep Pushdown", "Triple Exchange", "Triple Response Broad Jump", "Tuck Crunch", "Tuck Hold", "Tuck Jump", "Tuck Jumps", "Tuck Jumps (Continuous)", "Tuck Up w/Plate", "Tumbling Warm-Up", "Turkish Get Up", "Twisting Crunch", "Two Arm DB Preacher Curl", "Two Arm KB Clean", "Two Arm KB Jerk", "Two Arm KB Press", "Two Arm KB Row", "Two Hand Toe Touch", "Two-Foot Lateral Hurdle Jumps to a Run", "Typewriter Pull Up", "USAW Clean and Jerk", "V-Stretch", "V-Ups", "Varied W Drills", "Vertical Jump", "Vertical Jump and Land", "Vertical Leg Crunch", "Vertimax 1/4 Squat", "Vertimax Dynamic Skater", "Walk High Knee", "Walk Quad Stretch", "Walk Toe Touch", "Walk Up Bridge", "Walk and Jump onto Bosu", "Walking Barbell Lunge", "Walking Hip Cradle", "Walking March - with arms", "Walking Plank", "Walking Quad Stretch", "Walking Side Lunge (w/hip rotation)", "Walking Side Shuffle", "Walking Toe Touches", "Walking Toy Soldier", "Wall Balls", "Wall Sit", "Wall Walk", "Warrior 1", "Warrior 2", "Weighted Bench Dip", "Weighted Box Jump", "Weighted Chin Ups", "Weighted Lunges", "Wheelbarrow Walk", "Wicket Drill", "Wide Grip Barbell Bench Press", "Wide Grip Bench Press", "Wide Grip Pull Ups", "Wide Grip Rear Pull Up", "Wide Grip Standing Barbell Curl", "Wide Incline Push In", "YTw", "Yates Row", "YoYo Intermittent Recovery Test", "Yoke Walk", "Z Drill", "Z-Press", "Zercher Squat", "Zig Zag Side Shuffle to Cones", "lateral crossover combo", "lying leg recovery", "mcgill curl up and push up", "mcgill deadbug", "side plank and Rolls", "thoracic stretch hip flexor-McGill", "trap bar carry"
+    ];
+
+    // Helper functions
+    function getMuscles(exercise) {
+        const name = exercise.toLowerCase();
+        if (name.includes('squat') || name.includes('lunge')) return { primary: "Quads / Glutes", secondary: ["Core", "Hamstrings"] };
+        if (name.includes('press') || name.includes('bench') || name.includes('push')) return { primary: "Chest", secondary: ["Triceps", "Shoulders"] };
+        if (name.includes('row') || name.includes('pull') || name.includes('lat')) return { primary: "Back", secondary: ["Biceps", "Rear Delts"] };
+        if (name.includes('deadlift') || name.includes('rdl')) return { primary: "Hamstrings", secondary: ["Glutes", "Back"] };
+        if (name.includes('plank') || name.includes('crunch') || name.includes('core')) return { primary: "Core", secondary: ["Hip Flexors"] };
+        if (name.includes('shoulder') || name.includes('overhead')) return { primary: "Shoulders", secondary: ["Traps", "Triceps"] };
+        if (name.includes('run') || name.includes('sprint')) return { primary: "Cardio / Legs", secondary: ["Calves", "Quads"] };
+        return { primary: "Full Body", secondary: [] };
+    }
+
+    function getWarmup(targetMuscle) {
+        const warmups = {
+            "Chest": ["Arm Circles", "Cat Cow", "Band Pull-Apart", "Push-Up (Light)", "Chest Stretch"],
+            "Back": ["Cat Camel", "Thoracic Rotation", "Band Face Pull", "Inchworm", "Scapular Push-Up"],
+            "Shoulders": ["Arm Circles", "Band External Rotation", "Pass-Throughs", "YTw", "Shoulder Taps"],
+            "Quads / Glutes": ["Leg Swings", "Bodyweight Squat", "Hip Circles", "Walking Lunge (No Weight)", "Glute Bridge"],
+            "Hamstrings": ["Leg Swings", "Good Morning (Light)", "RDL (Empty Bar)", "Walking Toe Touch", "Supine Leg Raise"],
+            "Core": ["Dead Bug", "Cat Camel", "Bird Dog", "Plank (Short Hold)", "Hollow Hold"],
+            "Full Body": ["Jumping Jacks", "Inchworm", "Cat Cow", "Leg Swings", "Arm Circles"]
+        };
+        return warmups[targetMuscle] || warmups["Full Body"];
+    }
+
+    function getCooldown(targetMuscle) {
+        const cooldowns = {
+            "Chest": ["Pec Stretch (Doorway)", "Childs Pose", "Triceps Stretch", "Deep Breathing"],
+            "Back": ["Childs Pose", "Cat Camel", "Lat Stretch", "Thread the Needle"],
+            "Shoulders": ["Cross-body Shoulder Stretch", "Childs Pose", "Triceps Stretch", "Neck Stretch"],
+            "Quads / Glutes": ["Quad Stretch", "Figure Four Stretch", "Pigeon Stretch", "Hamstring Stretch"],
+            "Hamstrings": ["Hamstring Stretch", "Forward Fold", "Downward Dog", "Seated Forward Fold"],
+            "Core": ["Childs Pose", "Cat Cow", "Supine Twist", "Deep Breathing"],
+            "Full Body": ["Childs Pose", "Forward Fold", "Cat Cow", "Supine Twist"]
+        };
+        return cooldowns[targetMuscle] || cooldowns["Full Body"];
+    }
+
+    function filterExercisesByMuscle(muscle, category, count) {
+        let filtered = allExercises.filter(ex => getMuscles(ex).primary === muscle);
+        return filtered.slice(0, count);
+    }
+
+    // Local Storage for saved workouts, progress, calendar
+    let savedWorkouts = JSON.parse(localStorage.getItem('workouts') || '[]');
+    let progressLog = JSON.parse(localStorage.getItem('progress') || '[]');
+    let calendarEvents = JSON.parse(localStorage.getItem('calendar') || '[]');
+
+    let currentWorkoutHTML = '';
+
+    function generateWorkout() {
+        const primaryMuscle = document.getElementById('primaryMuscle').value;
+        const workoutCat = document.getElementById('workoutCategory').value;
+        const duration = document.getElementById('duration').value;
+        let exerciseCount = duration === 'short' ? 4 : (duration === 'medium' ? 6 : 8);
+        
+        const exercises = filterExercisesByMuscle(primaryMuscle, workoutCat, exerciseCount);
+        const warmups = getWarmup(primaryMuscle);
+        const cooldowns = getCooldown(primaryMuscle);
+        const notes = document.getElementById('workoutNotes').value;
+        
+        let html = `<div class="workout-plan" id="currentWorkoutPlan">
+            <div class="section-label">🔥 WARM-UP (${primaryMuscle}-Specific)</div>
+            <div class="warmup-block">`;
+        warmups.forEach(w => { html += `<div style="padding:6px 0">🏃 ${w} — 30-45 sec</div>`; });
+        html += `</div>
+            <div class="section-label">💪 MAIN WORKOUT (${workoutCat} Focus)</div>`;
+        exercises.forEach((ex, idx) => {
+            html += `<div class="exercise-block">
+                <strong>${idx+1}. ${ex}</strong><br>
+                <span style="font-size:0.8rem; color:#5a6e7c;">🎯 Target: ${primaryMuscle} • 3 sets of 8-12 reps</span>
+                <div style="margin-top:8px;">
+                    <input type="text" placeholder="Weight (kg/lbs)" style="width:80px; margin-right:8px;" class="weight-input-${idx}">
+                    <input type="text" placeholder="Reps" style="width:80px;" class="reps-input-${idx}">
+                </div>
+            </div>`;
+        });
+        html += `<div class="section-label">🧘 COOL-DOWN (${primaryMuscle}-Specific)</div>
+            <div class="cooldown-block">`;
+        cooldowns.forEach(c => { html += `<div style="padding:6px 0">🧘 ${c} — 30 sec hold</div>`; });
+        html += `</div>`;
+        if (notes) html += `<div class="section-label">📝 Notes</div><div class="saved-workout">${notes}</div>`;
+        html += `</div>`;
+        document.getElementById('workoutOutput').innerHTML = html;
+        currentWorkoutHTML = html;
+    }
+
+    function saveWorkout() {
+        const primaryMuscle = document.getElementById('primaryMuscle').value;
+        const workoutCat = document.getElementById('workoutCategory').value;
+        const notes = document.getElementById('workoutNotes').value;
+        const date = new Date().toLocaleDateString();
+        const workout = { id: Date.now(), date, primaryMuscle, workoutCat, notes, html: currentWorkoutHTML };
+        savedWorkouts.push(workout);
+        localStorage.setItem('workouts', JSON.stringify(savedWorkouts));
+        alert('Workout saved!');
+        renderSavedWorkouts();
+    }
+
+    function renderSavedWorkouts() {
+        const container = document.getElementById('savedWorkoutsList');
+        if (!container) return;
+        if (savedWorkouts.length === 0) {
+            container.innerHTML = '<p>No saved workouts yet.</p>';
+            return;
+        }
+        let html = '';
+        savedWorkouts.slice().reverse().forEach(w => {
+            html += `<div class="saved-workout">
+                <strong>${w.date}</strong> - ${w.primaryMuscle} / ${w.workoutCat}<br>
+                <small>${w.notes || 'No notes'}</small>
+                <button onclick="deleteWorkout(${w.id})" style="margin-top:8px; background:#dc2626; width:auto; padding:6px 12px;">Delete</button>
+            </div>`;
+        });
+        container.innerHTML = html;
+    }
+
+    function deleteWorkout(id) {
+        savedWorkouts = savedWorkouts.filter(w => w.id !== id);
+        localStorage.setItem('workouts', JSON.stringify(savedWorkouts));
+        renderSavedWorkouts();
+    }
+
+    function addProgress() {
+        const exercise = document.getElementById('progressExercise').value;
+        const weight = document.getElementById('progressWeight').value;
+        const reps = document.getElementById('progressReps').value;
+        if (!weight || !reps) return;
+        const entry = { id: Date.now(), exercise, weight, reps, date: new Date().toLocaleDateString() };
+        progressLog.push(entry);
+        localStorage.setItem('progress', JSON.stringify(progressLog));
+        renderProgressTable();
+        document.getElementById('progressWeight').value = '';
+        document.getElementById('progressReps').value = '';
+    }
+
+    function renderProgressTable() {
+        const container = document.getElementById('progressTable');
+        if (!container) return;
+        if (progressLog.length === 0) {
+            container.innerHTML = '<p>No progress logged yet.</p>';
+            return;
+        }
+        let html = '<table class="progression-table"><tr><th>Date</th><th>Exercise</th><th>Weight</th><th>Reps</th><th>1RM (Est)</th><th>Action</th></tr>';
+        progressLog.slice().reverse().forEach(p => {
+            const est1RM = Math.round(parseFloat(p.weight) * (1 + parseFloat(p.reps)/30));
+            html += `<tr>
+                <td>${p.date}</td>
+                <td>${p.exercise}</td>
+                <td>${p.weight}</td>
+                <td>${p.reps}</td>
+                <td>${est1RM}</td>
+                <td><button onclick="deleteProgress(${p.id})" style="background:#dc2626; width:auto; padding:4px 8px;">X</button></td>
+            </tr>`;
+        });
+        html += '</table>';
+        container.innerHTML = html;
+    }
+
+    function deleteProgress(id) {
+        progressLog = progressLog.filter(p => p.id !== id);
+        localStorage.setItem('progress', JSON.stringify(progressLog));
+        renderProgressTable();
+    }
+
+    function renderCalendar() {
+        const container = document.getElementById('weeklyCalendar');
+        if (!container) return;
+        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        let html = '<div class="calendar-grid">';
+        days.forEach(day => {
+            const dayEvents = calendarEvents.filter(e => e.day === day);
+            html += `<div class="calendar-day" onclick="selectDay('${day}')">
+                <div class="day-name">${day}</div>`;
+            dayEvents.forEach(e => {
+                html += `<div class="workout-indicator">💪 ${e.name}</div>`;
+            });
+            html += `</div>`;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+    }
+
+    function selectDay(day) {
+        const workoutName = prompt(`Add workout to ${day}:`, 'Chest Day');
+        if (workoutName) {
+            calendarEvents.push({ day, name: workoutName, id: Date.now() });
+            localStorage.setItem('calendar', JSON.stringify(calendarEvents));
+            renderCalendar();
+        }
+    }
+
+    function addCurrentToCalendar() {
+        const primaryMuscle = document.getElementById('primaryMuscle').value;
+        const day = prompt('Which day? (Monday, Tuesday, etc.)', 'Monday');
+        if (day) {
+            calendarEvents.push({ day, name: `${primaryMuscle} Day`, id: Date.now() });
+            localStorage.setItem('calendar', JSON.stringify(calendarEvents));
+            renderCalendar();
+            alert('Added to calendar!');
+        }
+    }
+
+    function exportExercisesCSV() {
+        let csv = "Exercise Name\n" + allExercises.join("\n");
+        downloadCSV(csv, "exercise_library.csv");
+    }
+
+    function exportProgressCSV() {
+        let csv = "Date,Exercise,Weight,Reps,1RM\n";
+        progressLog.forEach(p => {
+            const est1RM = Math.round(parseFloat(p.weight) * (1 + parseFloat(p.reps)/30));
+            csv += `${p.date},${p.exercise},${p.weight},${p.reps},${est1RM}\n`;
+        });
+        downloadCSV(csv, "progress_log.csv");
+    }
+
+    function exportWorkoutsCSV() {
+        let csv = "Date,Primary Muscle,Category,Notes\n";
+        savedWorkouts.forEach(w => {
+            csv += `${w.date},${w.primaryMuscle},${w.workoutCat},"${w.notes || ''}"\n`;
+        });
+        downloadCSV(csv, "saved_workouts.csv");
+    }
+
+    function downloadCSV(csv, filename) {
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+    }
+
+    function showTab(tabName) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        document.getElementById('plannerTab').style.display = 'none';
+        document.getElementById('calendarTab').style.display = 'none';
+        document.getElementById('progressTab').style.display = 'none';
+        document.getElementById('savedTab').style.display = 'none';
+        document.getElementById('excelTab').style.display = 'none';
+        document.getElementById(`${tabName}Tab`).style.display = 'grid';
+        if (tabName === 'progress') renderProgressTable();
+        if (tabName === 'saved') renderSavedWorkouts();
+        if (tabName === 'calendar') renderCalendar();
+    }
+
+    // Initialize exercise dropdown for progress
+    function initProgressDropdown() {
+        const select = document.getElementById('progressExercise');
+        if (select) {
+            allExercises.slice(0, 100).forEach(ex => {
+                const option = document.createElement('option');
+                option.value = ex;
+                option.textContent = ex;
+                select.appendChild(option);
+            });
+        }
+    }
+
+    // Event Listeners
+    document.getElementById('generateBtn')?.addEventListener('click', generateWorkout);
+    document.getElementById('saveWorkoutBtn')?.addEventListener('click', saveWorkout);
+    document.getElementById('addProgressBtn')?.addEventListener('click', addProgress);
+    document.getElementById('addToCalendarBtn')?.addEventListener('click', addCurrentToCalendar);
+    document.getElementById('exportExercisesBtn')?.addEventListener('click', exportExercisesCSV);
+    document.getElementById('exportProgressBtn')?.addEventListener('click', exportProgressCSV);
+    document.getElementById('exportWorkoutsBtn')?.addEventListener('click', exportWorkoutsCSV);
+    document.getElementById('exportSavedBtn')?.addEventListener('click', exportWorkoutsCSV);
+
+    // Muscle selectors
+    const muscles = ["Chest", "Back", "Shoulders", "Quads / Glutes", "Hamstrings", "Core", "Full Body"];
+    const container = document.getElementById('muscleSelectors');
+    if (container) {
+        muscles.forEach(m => {
+            const chip = document.createElement('div');
+            chip.className = 'muscle-chip';
+            chip.innerText = m;
+            chip.onclick = () => {
+                document.querySelectorAll('#muscleSelectors .muscle-chip').forEach(c => c.classList.remove('selected'));
+                chip.classList.add('selected');
+                document.getElementById('primaryMuscle').value = m;
+            };
+            container.appendChild(chip);
+        });
+    }
+
+    initProgressDropdown();
+    generateWorkout();
+    window.deleteWorkout = deleteWorkout;
+    window.deleteProgress = deleteProgress;
+    window.selectDay = selectDay;
+    window.showTab = showTab;
+</script>
+</body>
+</html>
